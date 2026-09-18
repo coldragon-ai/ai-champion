@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="2026 행정안전부 안전점검 결과 보고서 검색·열람 페이지">
+  <title>2026 안전점검 보고서</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="brand" aria-label="행정안전부 내부자료">
+        <span class="brand-mark">행정안전부</span>
+        <span class="brand-label">내부자료</span>
+      </div>
+      <p class="eyebrow">2026년 상반기 종합 안전점검</p>
+      <h1>2026 안전점검 결과 보고서</h1>
+      <p class="subtitle">보고서의 장별 내용을 검색하고 열람할 수 있습니다.</p>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="search-panel" aria-label="보고서 검색">
+      <label for="searchInput">보고서 내 검색</label>
+      <div class="search-box">
+        <svg aria-hidden="true" viewBox="0 0 24 24"><path d="m21 21-4.35-4.35m2.35-5.65a8 8 0 1 1-16 0 8 8 0 0 1 16 0Z"/></svg>
+        <input id="searchInput" type="search" placeholder="제목 또는 본문에서 검색하세요" autocomplete="off">
+        <button id="clearButton" type="button" aria-label="검색어 지우기" hidden>지우기</button>
+      </div>
+      <div class="search-meta" aria-live="polite">
+        <p id="resultCount">자료를 불러오는 중입니다.</p>
+        <button id="resetButton" class="text-button" type="button" hidden>전체 보기</button>
+      </div>
+    </section>
+
+    <section id="cardList" class="card-list" aria-label="보고서 장 목록" aria-busy="true"></section>
+
+    <section id="emptyState" class="empty-state" hidden>
+      <div class="empty-icon">?</div>
+      <h2>검색 결과가 없습니다</h2>
+      <p>다른 검색어를 입력하거나 전체 보기를 선택해 주세요.</p>
+    </section>
+
+    <section id="errorState" class="error-state" hidden>
+      <h2>보고서 데이터를 불러오지 못했습니다</h2>
+      <p><code>장데이터.json</code> 파일이 세 코드 파일과 같은 폴더에 있는지 확인해 주세요.</p>
+    </section>
+  </main>
+
+  <footer><p>행정안전부 안전정책총괄과 · 2026</p></footer>
+  <script src="app.js" defer></script>
+</body>
+</html>
