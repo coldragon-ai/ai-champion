@@ -25,6 +25,14 @@ const FALLBACK_ARTICLES = [
 
 let articles = [];
 
+function normalizeSearchText(value) {
+  return String(value)
+    .normalize("NFKC")
+    .toLocaleLowerCase("ko-KR")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
 function escapeHtml(value) {
   return String(value)
     .replaceAll("&", "&amp;")
@@ -56,7 +64,7 @@ function renderArticles(items, keyword = "") {
         <article class="article-card">
           <div class="article-heading">
             <span class="article-number">${escapeHtml(article.조)}</span>
-            <h2 class="article-title">${escapeHtml(article.제목)}</h2>
+            <h2 class="article-title">${highlightKeyword(article.제목, keyword)}</h2>
           </div>
           <p class="article-body">${highlightKeyword(article.본문, keyword)}</p>
         </article>
@@ -71,9 +79,12 @@ function renderArticles(items, keyword = "") {
 
 function filterArticles() {
   const keyword = searchInput.value.trim();
-  const normalizedKeyword = keyword.toLocaleLowerCase("ko-KR");
+  const normalizedKeyword = normalizeSearchText(keyword);
   const filtered = normalizedKeyword
-    ? articles.filter((article) => article.본문.toLocaleLowerCase("ko-KR").includes(normalizedKeyword))
+    ? articles.filter((article) => {
+        const searchableText = normalizeSearchText(`${article.조} ${article.제목} ${article.본문}`);
+        return searchableText.includes(normalizedKeyword);
+      })
     : articles;
 
   clearButton.hidden = keyword.length === 0;
@@ -81,6 +92,10 @@ function filterArticles() {
 }
 
 async function loadArticles() {
+  // 검색은 외부 파일 로딩을 기다리지 않고 즉시 사용할 수 있다.
+  articles = FALLBACK_ARTICLES;
+  filterArticles();
+
   try {
     const response = await fetch("조항데이터.json");
 
@@ -95,13 +110,11 @@ async function loadArticles() {
     }
 
     articles = data;
-    renderArticles(articles);
+    filterArticles();
   } catch (error) {
     console.info("외부 JSON을 읽을 수 없어 내장된 동일 데이터로 표시합니다.", error);
-    articles = FALLBACK_ARTICLES;
-    errorState.hidden = true;
-    renderArticles(articles);
   } finally {
+    errorState.hidden = true;
     articleContainer.setAttribute("aria-busy", "false");
   }
 }
