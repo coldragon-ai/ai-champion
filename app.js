@@ -1,130 +1,117 @@
-const articleContainer = document.querySelector("#articles");
-const searchInput = document.querySelector("#search-input");
-const clearButton = document.querySelector("#clear-button");
-const resultCount = document.querySelector("#result-count");
-const emptyState = document.querySelector("#empty-state");
-const errorState = document.querySelector("#error-state");
-
-const FALLBACK_ARTICLES = [
-  { "조": "제1조", "제목": "목적", "본문": "이 법은 행정정보의 통합관리와 공동활용에 관한 기본적인 사항을 정함으로써 행정의 효율성과 국민의 편익 증진에 이바지함을 목적으로 한다." },
-  { "조": "제2조", "제목": "정의", "본문": "이 법에서 사용하는 용어의 뜻은 다음 각 호와 같다.\n1. \"행정정보\"란 「전자정부법」 제2조제6호에 따른 행정정보를 말한다.\n2. \"공동활용\"이란 행정기관 간 행정정보를 상호 제공하여 사용하는 것을 말한다.\n3. \"통합관리\"란 「공공기록물 관리에 관한 법률」 제3조에 따른 기록물의 일부로 행정정보를 통합 관리하는 것을 말한다.\n4. \"데이터 표준\"이란 행정정보의 공동활용을 위한 형식·코드·식별자에 관한 표준을 말한다." },
-  { "조": "제3조", "제목": "다른 법률과의 관계", "본문": "행정정보의 통합관리 및 공동활용에 관하여 다른 법률에 특별한 규정이 있는 경우를 제외하고는 이 법에서 정하는 바에 따른다. 특히 「개인정보 보호법」, 「공공데이터의 제공 및 이용 활성화에 관한 법률」, 「지능정보화 기본법」에 따른 사항은 해당 법률을 우선 적용한다." },
-  { "조": "제4조", "제목": "국가 등의 책무", "본문": "국가와 지방자치단체는 행정정보의 통합관리와 공동활용을 위하여 필요한 시책을 수립하여야 한다. 행정안전부장관은 그 시책을 종합적으로 조정하며, 자세한 사항은 대통령령으로 정한다." },
-  { "조": "제5조", "제목": "기본계획의 수립", "본문": "① 행정안전부장관은 행정정보 통합관리 기본계획을 5년마다 수립하여야 한다.\n② 기본계획에는 다음 각 호의 사항을 포함하여야 한다.\n1. 행정정보 통합관리의 기본방향\n2. 행정정보 공동활용의 활성화 방안\n3. 「전자정부법」 제3조의 행정기관 정보화 시책과의 연계\n4. 그 밖에 대통령령으로 정하는 사항" },
-  { "조": "제6조", "제목": "시행계획의 수립", "본문": "행정기관의 장은 매년 시행계획을 수립하여야 하며, 그 결과를 행정안전부장관에게 보고하여야 한다. 시행계획의 형식과 절차는 대통령령으로 정한다." },
-  { "조": "제7조", "제목": "공동활용 협의회", "본문": "행정정보 공동활용에 관한 사항을 협의하기 위하여 행정안전부에 행정정보 공동활용 협의회를 둔다. 협의회의 구성과 운영에 필요한 사항은 대통령령으로 정한다." },
-  { "조": "제8조", "제목": "공동활용 신청", "본문": "행정기관의 장은 다른 행정기관이 보유한 행정정보를 활용하려는 경우에는 행정안전부장관에게 신청하여야 한다." },
-  { "조": "제9조", "제목": "공동활용 승인", "본문": "행정안전부장관은 신청을 받은 경우 「개인정보 보호법」 제17조에 따른 절차를 거쳐 30일 이내에 승인 여부를 결정하여야 한다." },
-  { "조": "제10조", "제목": "보안 조치", "본문": "공동활용 시 행정정보의 안전성 확보를 위하여 「정보통신망 이용촉진 및 정보보호 등에 관한 법률」 및 「개인정보 보호법」에서 정하는 보안 조치를 적용하여야 한다." },
-  { "조": "제11조", "제목": "데이터 표준", "본문": "행정안전부장관은 데이터 표준을 정하여 고시할 수 있다. 데이터 표준의 적용 범위와 시기는 대통령령으로 정한다." },
-  { "조": "제12조", "제목": "표준 적용 의무", "본문": "행정기관은 행정정보를 생산·관리·활용할 때 제11조에 따른 데이터 표준을 따라야 한다." },
-  { "조": "제13조", "제목": "실태조사", "본문": "행정안전부장관은 매년 행정정보 통합관리 실태를 조사하여 그 결과를 공개한다." },
-  { "조": "제14조", "제목": "과태료", "본문": "다음 각 호의 어느 하나에 해당하는 자에게는 1천만원 이하의 과태료를 부과한다.\n1. 제8조를 위반하여 승인 없이 공동활용한 자\n2. 제12조에 따른 데이터 표준을 정당한 사유 없이 위반한 자" },
-  { "조": "제15조", "제목": "시행일", "본문": "이 법은 2026년 7월 1일부터 시행한다." },
+// 장데이터.json과 「2026 안전점검 보고서(가상)」의 장별 원문입니다.
+// 데이터를 코드에 함께 담아 index.html을 직접 열어도 검색되도록 구성했습니다.
+const REPORT_DATA = [
+  {
+    "장": "1",
+    "제목": "개요",
+    "본문": "본 보고서는 행정안전부 안전정책총괄과가 2026년 상반기 실시한 종합 안전점검 결과를 정리한 자료다.\n\n총 점검 건수는 **450건**이며, 지적사항 **120건** 중 시정 완료율은 **85%**이다. 예산 집행률은 **92%**, 총괄책임자는 **권혁수** 안전정책총괄과장이다."
+  },
+  {
+    "장": "2",
+    "제목": "분야별 결과",
+    "본문": "분야별 점검은 시설안전·교통안전·재난안전·산업안전 4개 분야로 진행됐다. 분야별 총합은 **450건**과 일치한다.\n\n지적사항 **115건** 중 80% 이상이 1분기 내 시정되었으며, 누적 시정 완료율은 **85%**으로 집계됐다."
+  },
+  {
+    "장": "3",
+    "제목": "예산 운용",
+    "본문": "상반기 예산 집행률 **90%**은 전년 동기 대비 5%p 상승한 수치다.\n\n총괄 운영은 **권혁수** 과장이 직접 주재했고, 분기별 점검회의 5회를 개최했다."
+  },
+  {
+    "장": "4",
+    "제목": "향후 계획",
+    "본문": "상반기 실적을 되짚어 보면, 총 점검 건수는 **440건**으로 마감됐고 시정 완료율은 **82%**로 집계됐다.\n\n이를 바탕으로 하반기에는 미시정 과제 해소와 취약 분야 재점검을 중심으로 점검 체계를 보강할 계획이다."
+  },
+  {
+    "장": "5",
+    "제목": "결론",
+    "본문": "행정안전부 안전정책총괄과는 2026년 상반기 동안 **450건**의 안전점검을 차질 없이 완료했다. 총괄 책임은 **권혁주** 과장이 맡았으며, 향후에도 분기별 점검 체계를 강화한다."
+  }
 ];
 
-let articles = [];
+const cardList = document.querySelector("#cardList");
+const searchInput = document.querySelector("#searchInput");
+const clearButton = document.querySelector("#clearButton");
+const resetButton = document.querySelector("#resetButton");
+const resultCount = document.querySelector("#resultCount");
+const emptyState = document.querySelector("#emptyState");
+const errorState = document.querySelector("#errorState");
 
-function normalizeSearchText(value) {
-  return String(value)
-    .normalize("NFKC")
-    .toLocaleLowerCase("ko-KR")
-    .replace(/\s+/g, " ")
-    .trim();
-}
+let chapters = REPORT_DATA;
 
 function escapeHtml(value) {
-  return String(value)
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#039;");
+  const div = document.createElement("div");
+  div.textContent = String(value ?? "");
+  return div.innerHTML;
 }
 
 function escapeRegExp(value) {
   return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
-function highlightKeyword(text, keyword) {
-  const safeText = escapeHtml(text);
-
-  if (!keyword) {
-    return safeText;
-  }
-
-  const pattern = new RegExp(`(${escapeRegExp(escapeHtml(keyword))})`, "gi");
-  return safeText.replace(pattern, "<mark>$1</mark>");
+function highlight(value, keyword) {
+  const safeText = escapeHtml(value);
+  if (!keyword) return safeText;
+  return safeText.replace(new RegExp(`(${escapeRegExp(escapeHtml(keyword))})`, "gi"), "<mark>$1</mark>");
 }
 
-function renderArticles(items, keyword = "") {
-  articleContainer.innerHTML = items
-    .map(
-      (article) => `
-        <article class="article-card">
-          <div class="article-heading">
-            <span class="article-number">${escapeHtml(article.조)}</span>
-            <h2 class="article-title">${highlightKeyword(article.제목, keyword)}</h2>
-          </div>
-          <p class="article-body">${highlightKeyword(article.본문, keyword)}</p>
-        </article>
-      `,
-    )
+function formatBody(body, keyword) {
+  return String(body ?? "")
+    .split(/\n\s*\n/)
+    .map((paragraph) => {
+      const safe = highlight(paragraph, keyword)
+        .replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")
+        .replace(/\n/g, "<br>");
+      return `<p>${safe}</p>`;
+    })
     .join("");
+}
 
-  resultCount.textContent = `결과 ${items.length}건`;
+function renderCards(items, keyword = "") {
+  cardList.innerHTML = items.map((item) => `
+    <article class="report-card">
+      <div class="chapter-number"><span>CHAPTER</span><strong>${escapeHtml(item["장"])}</strong></div>
+      <div class="card-content">
+        <h2>${highlight(item["제목"], keyword)}</h2>
+        ${formatBody(item["본문"], keyword)}
+      </div>
+    </article>
+  `).join("");
+  cardList.hidden = items.length === 0;
   emptyState.hidden = items.length !== 0;
-  articleContainer.hidden = items.length === 0;
 }
 
-function filterArticles() {
+function applySearch() {
   const keyword = searchInput.value.trim();
-  const normalizedKeyword = normalizeSearchText(keyword);
-  const filtered = normalizedKeyword
-    ? articles.filter((article) => {
-        const searchableText = normalizeSearchText(`${article.조} ${article.제목} ${article.본문}`);
-        return searchableText.includes(normalizedKeyword);
-      })
-    : articles;
+  const normalized = keyword.toLocaleLowerCase("ko-KR");
+  const filtered = normalized
+    ? chapters.filter((item) => `${item["제목"]} ${item["본문"]}`.toLocaleLowerCase("ko-KR").includes(normalized))
+    : chapters;
 
-  clearButton.hidden = keyword.length === 0;
-  renderArticles(filtered, keyword);
+  renderCards(filtered, keyword);
+  resultCount.innerHTML = keyword
+    ? `<strong>${filtered.length}개</strong>의 검색 결과 · 전체 ${chapters.length}개 장`
+    : `전체 <strong>${chapters.length}개 장</strong>`;
+  clearButton.hidden = !keyword;
+  resetButton.hidden = !keyword;
 }
 
-async function loadArticles() {
-  // 검색은 외부 파일 로딩을 기다리지 않고 즉시 사용할 수 있다.
-  articles = FALLBACK_ARTICLES;
-  filterArticles();
-
-  try {
-    const response = await fetch("조항데이터.json");
-
-    if (!response.ok) {
-      throw new Error(`HTTP ${response.status}`);
-    }
-
-    const data = await response.json();
-
-    if (!Array.isArray(data)) {
-      throw new TypeError("조항 데이터가 배열 형식이 아닙니다.");
-    }
-
-    articles = data;
-    filterArticles();
-  } catch (error) {
-    console.info("외부 JSON을 읽을 수 없어 내장된 동일 데이터로 표시합니다.", error);
-  } finally {
-    errorState.hidden = true;
-    articleContainer.setAttribute("aria-busy", "false");
-  }
-}
-
-searchInput.addEventListener("input", filterArticles);
-
-clearButton.addEventListener("click", () => {
+function resetSearch() {
   searchInput.value = "";
-  filterArticles();
+  applySearch();
   searchInput.focus();
+}
+
+function loadReport() {
+  errorState.hidden = true;
+  applySearch();
+  cardList.setAttribute("aria-busy", "false");
+}
+
+searchInput.addEventListener("input", applySearch);
+clearButton.addEventListener("click", resetSearch);
+resetButton.addEventListener("click", resetSearch);
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape" && searchInput.value) resetSearch();
 });
 
-loadArticles();
+loadReport();
