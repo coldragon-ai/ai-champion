@@ -1,80 +1,54 @@
 <!doctype html>
 <html lang="ko">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="행정정보 통합관리 기본법의 조항을 검색하고 확인하는 정적 사이트" />
-    <title>행정정보 통합관리 기본법 | 조항 검색</title>
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%231a428a'/%3E%3Cpath d='M18 14h22l8 8v28H18z' fill='white'/%3E%3Cpath d='M40 14v10h10M25 31h16M25 38h16M25 45h11' fill='none' stroke='%231a428a' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E" />
-    <link rel="stylesheet" href="style.css" />
-    <script src="app.js" defer></script>
-  </head>
-  <body>
-    <header class="site-header">
-      <div class="header-inner">
-        <div class="identity" aria-label="법령 조항 검색">
-          <span class="emblem" aria-hidden="true">
-            <svg viewBox="0 0 32 32" role="img">
-              <path d="M7 4.5h12l6 6V27H7z" />
-              <path d="M19 4.5V11h6M11 16h10M11 20h10M11 24h6" />
-            </svg>
-          </span>
-          <span>법령 조항 검색</span>
-        </div>
-        <span class="data-badge">가상자료</span>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="2026 행정안전부 안전점검 결과 보고서 검색·열람 페이지">
+  <title>2026 안전점검 보고서</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="brand" aria-label="행정안전부 내부자료">
+        <span class="brand-mark">행정안전부</span>
+        <span class="brand-label">내부자료</span>
       </div>
-    </header>
+      <p class="eyebrow">2026년 상반기 종합 안전점검</p>
+      <h1>2026 안전점검 결과 보고서</h1>
+      <p class="subtitle">보고서의 장별 내용을 검색하고 열람할 수 있습니다.</p>
+    </div>
+  </header>
 
-    <main class="page-shell">
-      <section class="intro" aria-labelledby="page-title">
-        <p class="eyebrow">행정정보 통합관리</p>
-        <h1 id="page-title">행정정보 통합관리 기본법</h1>
-        <p class="law-meta">[시행 2026. 7. 1.] [법률 제99999호, 2026. 6. 1., 가상 제정]</p>
-      </section>
-
-      <section class="search-panel" aria-label="조항 검색">
-        <label for="search-input">조항 키워드 검색</label>
-        <div class="search-row">
-          <div class="input-wrap">
-            <svg class="search-icon" viewBox="0 0 24 24" aria-hidden="true">
-              <circle cx="11" cy="11" r="6.5"></circle>
-              <path d="m16 16 4 4"></path>
-            </svg>
-            <input
-              id="search-input"
-              type="search"
-              placeholder="예: 개인정보, 데이터 표준, 대통령령"
-              autocomplete="off"
-              aria-describedby="search-help result-count"
-            />
-          </div>
-          <button id="clear-button" type="button" hidden>초기화</button>
-        </div>
-        <div class="search-status">
-          <p id="search-help">조 번호·제목·본문에 포함된 단어를 기준으로 찾습니다.</p>
-          <p id="result-count" class="result-count" aria-live="polite">결과 0건</p>
-        </div>
-      </section>
-
-      <section id="articles" class="article-grid" aria-label="법령 조항 목록" aria-busy="true"></section>
-
-      <section id="empty-state" class="empty-state" hidden>
-        <span aria-hidden="true">⌕</span>
-        <h2>검색 결과가 없습니다</h2>
-        <p>다른 키워드로 검색해 보세요.</p>
-      </section>
-
-      <section id="error-state" class="error-state" hidden role="alert">
-        <h2>조항을 불러오지 못했습니다</h2>
-        <p>조항데이터.json 파일이 같은 폴더에 있는지 확인해 주세요.</p>
-      </section>
-    </main>
-
-    <footer>
-      <div class="footer-inner">
-        <p>본 페이지의 내용은 연습용 가상자료이며 실제 법령과 무관합니다.</p>
-        <a href="#page-title">맨 위로</a>
+  <main class="container">
+    <section class="search-panel" aria-label="보고서 검색">
+      <label for="searchInput">보고서 내 검색</label>
+      <div class="search-box">
+        <svg aria-hidden="true" viewBox="0 0 24 24"><path d="m21 21-4.35-4.35m2.35-5.65a8 8 0 1 1-16 0 8 8 0 0 1 16 0Z"/></svg>
+        <input id="searchInput" type="search" placeholder="제목 또는 본문에서 검색하세요" autocomplete="off">
+        <button id="clearButton" type="button" aria-label="검색어 지우기" hidden>지우기</button>
       </div>
-    </footer>
-  </body>
+      <div class="search-meta" aria-live="polite">
+        <p id="resultCount">자료를 불러오는 중입니다.</p>
+        <button id="resetButton" class="text-button" type="button" hidden>전체 보기</button>
+      </div>
+    </section>
+
+    <section id="cardList" class="card-list" aria-label="보고서 장 목록" aria-busy="true"></section>
+
+    <section id="emptyState" class="empty-state" hidden>
+      <div class="empty-icon">?</div>
+      <h2>검색 결과가 없습니다</h2>
+      <p>다른 검색어를 입력하거나 전체 보기를 선택해 주세요.</p>
+    </section>
+
+    <section id="errorState" class="error-state" hidden>
+      <h2>보고서 데이터를 불러오지 못했습니다</h2>
+      <p><code>장데이터.json</code> 파일이 세 코드 파일과 같은 폴더에 있는지 확인해 주세요.</p>
+    </section>
+  </main>
+
+  <footer><p>행정안전부 안전정책총괄과 · 2026</p></footer>
+  <script src="app.js" defer></script>
+</body>
 </html>
